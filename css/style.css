@@ -1,0 +1,12 @@
+caiyun-operate-container {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    width: 300px;
+    max-height: 100%;
+    overflow: auto;
+    border: 1px solid blue;
+    background: #eaeaea;
+    z-index: 999;
+    /*pointer-events: none;*/
+}

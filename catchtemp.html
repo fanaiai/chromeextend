@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="vendor/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="libs/x-tag-core-with-shadowdom.js"></script>
+    <style type="text/css">
+        caiyun-operate-container{
+            position: fixed;
+            top:100px;
+            right: 20px;
+            width:300px;
+            max-height:100%;
+            overflow:auto;
+            border:1px solid blue;
+            background: #eaeaea;
+        }
+    </style>
+
+</head>
+
+<body>
+    <caiyun-operate-container></caiyun-operate-container>
+</body>
+<script type="text/javascript">
+xtag.register('caiyun-operate-container', {
+    content: '',
+    lifecycle: {
+        created: function() {
+            this.createDom();
+        },
+        inserted: function() {
+            console.log("inserted,插入标签");
+        },
+        removed: function() {
+            console.log("removed,删除标签");
+        },
+        attributeChanged: function(attrName, oldValue, newValue) {
+            console.log("attributeChanged", attrName, oldValue, newValue);
+        }
+    },
+    methods: {
+        shout: function(message) {
+            console.log(message);
+        },
+        createDom:function(){
+            var shadow = this.createShadowRoot();
+            var style = `<style type="text/css">
+                            .catch-container{
+                                width:100%;
+                            }
+                            .catch-container ul{
+                                list-style: none;
+                                line-height:28px;
+                                font-size:14px;
+                            }
+                            a{
+                                cursor: pointer;
+                                color:blue;
+                                margin-right:10px;
+                            }
+                            a:hover{
+                                color:red;
+                            }
+                        </style>`;
+            var innerHtml = `<div class="catch-container">
+                <ul>
+                    <li><a class='selectone'>选择当前元素</a><a class='selectsimilar'>选择相似元素</a></li>
+                    <li><a class='openone'>打开当前链接</a><a class='openall'>循环打开链接</a></li>
+                </ul>
+                <div>
+                </div>
+            </div>`;
+            shadow.innerHTML = style+innerHtml;
+        }
+    },
+    events: {
+        'click:delegate(p)': function(e) {
+            //e.currentTarget still === your xtag element
+            e.currentTarget.shout('哈哈')
+        },
+
+    }
+});
+</script>
+
+</html>
