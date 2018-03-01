@@ -246,6 +246,7 @@ xtag.register('caiyun-operate-container', {
                         CaiyunSteps.push(openpage);
                         var el_a;
                         $.each(CaiyunScope.currentpaths,function(i,ele){
+                            var $el=$(ele.pathstring);
                             if($(ele.pathstring)[0].tagName=='A'){
                                 el_a=$(ele.pathstring).attr('href');
                                 return false;
@@ -274,6 +275,7 @@ xtag.register('caiyun-operate-container', {
                         CaiyunSteps.push(openpage);
                         var el_a;
                         $.each(CaiyunScope.currentpaths,function(i,ele){
+                            var $el=$(ele.pathstring);
                             if($(ele.pathstring)[0].tagName=='A'){
                                 el_a=$(ele.pathstring).attr('href');
                                 return false;
