@@ -77,3 +77,48 @@ Array.prototype.includeItem = function (obj) {
     }  
     return result;
 }; 
+Array.prototype.deleteArray = function (delarray) {  
+    for(var i=this.length-1;i>=0;i--){
+        (function(that,item,j){
+            if(delarray.includeItem(item)>-1){
+            that.splice(j,1);
+            }
+        })(this,this[i],i)
+        
+    }
+}; 
+function getQuery(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
+function getExtractInfo(paths){
+        var infolist=[];
+        $.each(paths,function(i,ele){
+            var csspatharry=ele.css_selecter;
+            var name=ele.name;
+            var type=ele.extratype;
+            var attr_name=ele.attr_name;
+            $.each(csspatharry,function(j,pathobj){
+                var path=pathobj.pathstring;
+                var $el=$(path);
+                var info={
+                    name:name,
+                    type:type,
+                    attr_name:attr_name || '--',
+                    path:path
+                }
+                if(type=='txt'){
+                    info.value=$el.text();
+                    info.type_name='提取文本';
+                }
+                else{
+                    info.value=$el.attr(attr_name);
+                    info.type_name='提取属性';
+                }
+                infolist.unshift(info);
+            })
+        })
+        return infolist;
+    }

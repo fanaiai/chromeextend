@@ -28,10 +28,16 @@
          */
         getFullSelector: function(el) {
             var csspath = [];
-            for (; el && el.nodeType == 1 && el.nodeName != 'HTML'; el = el.parentNode) {
-                csspath.unshift(el.nodeName + getAttribute(el, this.options));
+            for (; el && el.nodeType == 1 && el.nodeName != 'BODY'; el = el.parentNode) {
+                var nodePath = el.nodeName + getAttribute(el, this.options);
+                var curPath=nodePath+(csspath.length>0?('>'+csspath.join('>')):'');
+                    csspath.unshift(nodePath + getPseudo(el));
             }
-            console.log(csspath);
+            var path = {
+                patharray: csspath,
+                pathstring: csspath.join('>')
+            }
+            return path;
         },
         /**
          * 获取唯一路径
@@ -40,16 +46,17 @@
          */
         getUniqueSelector: function(el) {
             var csspath = [];
-            for (; el && el.nodeType == 1 && el.nodeName != 'HTML'; el = el.parentNode) {
+            for (; el && el.nodeType == 1 && el.nodeName != 'BODY'; el = el.parentNode) {
                 var nodePath = el.nodeName + getAttribute(el, this.options);
-                if ($(nodePath + ">" + csspath.join('>')).length <= 1) {
+                var curPath=nodePath+(csspath.length>0?('>'+csspath.join('>')):'');
+                if ($(curPath).length <= 1 ) {
                     csspath.unshift(nodePath + getPseudo(el));
                     break;
                 } else {
                     csspath.unshift(nodePath + getPseudo(el));
                 }
             }
-            path = {
+            var path = {
                 patharray: csspath,
                 pathstring: csspath.join('>')
             }
@@ -66,13 +73,15 @@
         getSimilarSelector: function(path) {
             var similarpath = {};
             var childtags = [];
+            path=this.getFullSelector($(path.pathstring)[0]);
             for (var i = path.patharray.length; i >= 0; i--) {
                 var $el = $(path.patharray.slice(0, i).join('>'));
-                if ($el.siblings().length > 0) {
+                if ($el.siblings($el[0].tagName).length > 0) {
                     if (i <= 1) {
                     	similarpath=(this.getUniqueSelector($el.parent()[0]));
+                        
                     } else {
-                        similarpath.patharray = path.patharray.slice(0, i - 1);
+                        similarpath=this.getUniqueSelector($(path.patharray.slice(0, i - 1).join('>'))[0]);
                     }
                     childtags.unshift($(path.patharray.slice(0, i).join('>'))[0].tagName)
                     break;
@@ -104,9 +113,9 @@
         var attributes = el.attributes;
         var attributestring = '';
         $.each(attributes, function(i, e) {
-            if (e.name == 'class') {
+            if (e.name == 'class' && e.value.trim()!='') {
                 attributestring = attributestring + '.' + e.value.trim().replace(/\s+|\s+/g, '.');
-            } else if (e.name == 'id') {
+            } else if (e.name == 'id' && e.value.trim()!='') {
                 attributestring = attributestring + '#' + e.value.trim().replace(/\s+|\s+/g, '#');
             } else if (!options.ignoreallattributes) {
                 attributestring = attributestring + '[' + e.name + '=' + e.value + ']';

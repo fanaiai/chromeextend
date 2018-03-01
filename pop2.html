@@ -1,134 +1,70 @@
-<html lang="en">
-
+<!DOCTYPE html>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>自动监测编辑器测试</title>
-    <script>
-        var _moli = _moli || [];
-        window['_moli'] = _moli;
-        _moli.push(['init', {
-            'token': 'd914eb009023edb39ed474269d67974d'
-        }]);
-        _moli.push(['user', {
-            'username': 'value-expr',
-            'phone': '',
-            'email': '',
-            'ascontact': true
-        }]);
-        _moli.push(['event', {
-            'ename': '测试一个',
-            'selector': '.app #testinput:nth-of-type(2)',
-            'uri': '',
-            'attrs': {
-                // '属性': 'selector|.app #testinput:nth-of-type(2)',
-                '属性1': '哈哈啊',
-                // '属性2': 'e-obj-attr|ceshi',
-                // '属性3': 'txt|ceshi',
-                // '属性4': 'jsvar|ceshi'
-            }
-        }]);
-    </script>
-
-    <!-- <script src="./libs/webcomponents-lite.js"></script> -->
-    <!-- build:js autotracker.js -->
-    <script src="./libs/array.generics.js"></script>
-    <script src="./libs/x-tag-core-with-shadowdom.js"></script>
-    <script src="./libs/cssesc.js"></script>
-    <script src="./libs/optimal-select.js"></script>
-    <script src="./libs/base64.js"></script>
-    <script src="./utils/detector.js"></script>
-
-    <script src="./utils/extend.js"></script>
-    <script src="./utils/configs.js"></script>
-    <script src="./utils/utils.js"></script>
-    <script src="./utils/cssSelector.js"></script>
-    <script src="./utils/triggerEvent.js"></script>
-    <script src="./editor/js/button.js"></script>
-    <script src="./editor/js/eventmenus.js"></script>
-    <script src="./editor/js/highlight.js"></script>
-    <script src="./editor/js/modal.js"></script>
-    <script src="./editor/js/index.js"></script>
-    <script src="./editor/js/inspector.js"></script>
-    <script src="./editor/js/autotrack.js"></script>
-    <script src="./editor/js/loader.js"></script>
-    <!-- endbuild -->
-    <!-- <script src="./editor/js/functional.js"></script> -->
-
-
-</head>
-
-<body>
-    <div id="app">
-        <input type="text" id="testinput1" nz-model="demo" />
-        <input type="text" id="testinput" ceshi="ceshi属性" nz-model="demo" />
-    </div>
-    <script>
-        document.getElementById('app').addEventListener('click', function(e) {
-            console.log(e);
-            alert('addEventListener生效');
-        });
-
-        document.getElementById('testinput1').onclick = function() {
-            alert('click生效');
+    <title></title>
+    <style type="text/css">
+        div{
+            background: blue;
+            height:1000px;
         }
-    </script>
-    <script>
-        try {
-            var genHash = function() {
-                var object = {
-                    "nztrack_state": encodeURIComponent(JSON.stringify({
-                        "action": "nztrackeditor",
-                        "projectId": "1",
-                        "token": "d914eb009023edb39ed474269d67974d",
-                        "desiredHash": window.location.hash
-                    })),
-                    "nztrack_expires_in": 86400, //一天,单位秒
-                    "lib_v": "v1.0",
-                    "lib_url": '//221.122.73.190:8081/tracker/autotracker.js',
-                }
-
-                var res = "#";
-                for (var key in object) {
-                    res += key + "=" + object[key] + "&";
-                }
-                return res;
-            }
-
-
-            var loadLib = function() {
-                var getHashParam = function(hash, param) {
-                    var matches = hash.match(new RegExp(param + '=([^&]*)'));
-                    return matches ? matches[1] : null;
-                };
-                var lib_url = getHashParam(window.location.hash, 'lib_url') || "//221.122.73.190:8081/tracker/autotracker.js";
-                var script = document.createElement("script");
-                script.type = "text/javascript";
-                script.async = true;
-
-                if (document.location.protocol === 'file:' && lib_url.match(/^\/\//)) {
-                    script.src = 'http:' + lib_url;
-                } else {
-                    script.src = lib_url;
-                }
-                script.onload = script.onreadystatechange = function() {
-                    if ((!script.readyState || script.readyState === "loaded" || script.readyState === "complete")) {
-                        script.onload = script.onreadystatechange = null;
-                        nztrack.init('d914eb009023edb39ed474269d67974d', {
-                            api_host: 'http://zhao.lizhaoyu.xyz',
-                        });
-                    }
-                }
-                var first_script = document.getElementsByTagName("script")[0];
-                first_script.parentNode.insertBefore(script, first_script);
-            };
-
-            // loadLib();
-            nztrack.init('d914eb009023edb39ed474269d67974d', {
-                settrack: true,
-                api_host: 'http://127.0.0.1:20085',
-            });
-        } catch (e) {}
-    </script>
+    </style>
+    <script type="text/javascript" src="vendor/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="jquery.mousewheel.js"></script>
+</head>
+<body>
+    <div id="h">哈哈</div>
+    <div>
+        <h5>操作提示</h5>
+        <div>
+            <a>开始选择页面元素</a>
+        </div>
+        <!-- 进一个页面中需要采集链接的时候 -->
+        <div>
+            <p>已选择1个元素，您可以继续选择，或进行以下操作：</p>
+            <ul>
+                <li class="selectone"><a>仅选择此元素</a></li>
+                <li class="selectsimilar"><a>选择此元素的同类元素</a></li>
+                <li class="clickone"><a>点击此链接</a></li>
+                <li class="cancelselected"><a>取消选择</a></li>
+            </ul>
+        </div>
+        <div>
+            <p>已选择n个元素，您可以继续选择，或进行以下操作：</p>
+            <ul>
+                <li class="selectsimilar"><a>选择当前元素的同类元素</a></li>
+                <li class="clickall"><a>循环点击这些元素内的链接</a></li>
+                <li class="cancelselected"><a>取消选择</a></li>
+            </ul>
+        </div>
+        <div>
+            <p>已选择n个链接，您可以进行以下操作：</p>
+            <ul>
+                <li class=""><a>采集该链接文本</a></li>
+                <li class=""><a>采集该链接地址</a></li>
+                <li class=""><a>取消选择</a></li>
+            </ul>
+        </div>
+        <!-- 点击进一个链接要采集文本 -->
+        <div>
+            <p>请选择您要采集的文本：</p>
+            <ul>
+                <li><a>采集该链接文本</a></li>
+                <li><a>采集该链接地址</a></li>
+                <li><a>取消选择</a></li>
+            </ul>
+        </div>
+    </div>
 </body>
-
+<script type="text/javascript">
+    window.onwheel=document.onwheel=function(e){
+        // console.log($("#h")[0].getBoundingClientRect().top)
+    }
+    window.onscroll=document.onscroll=function(e){
+        console.log($("#h")[0].getBoundingClientRect().top)
+    }
+    $("document").mousewheel(function(e){
+        console.log($("#h")[0].getBoundingClientRect().top)
+        $(window).scroll()
+    })
+</script>
 </html>
