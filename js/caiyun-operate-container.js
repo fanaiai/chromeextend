@@ -43,11 +43,11 @@ xtag.register('caiyun-operate-container', {
                             }
                             .catch-container ul li{
                                 padding:0 10px;
-                                background:rgb(251, 247, 247);
+                                background:rgb(250, 253, 255);
                             }
                             a{
                                 cursor: pointer;
-                                color:rgb(255, 73, 0);
+                                color:rgb(0, 139, 230);
                                 margin-right:10px;
                                 pointer-events:auto;
                             }
@@ -63,10 +63,10 @@ xtag.register('caiyun-operate-container', {
                             }
                             .ope,.info{
                                 line-height: 30px;
-                                 background:#eee;
+                                 background:rgb(251, 251, 251);
                             }
                             .ope a{
-                                color:rgb(20, 150, 245);
+                                color:rgb(0, 139, 230);
                                 font-size:14px;
                             }
                             textarea{
@@ -128,16 +128,8 @@ xtag.register('caiyun-operate-container', {
                         <div class="selectone-container select-div">
                             <p>已选择1个普通/链接元素，您可以继续选择，或进行以下操作：</p>
                             <ul>
-                                <li class="confirmone"><a>仅选此元素</a></li>
+                                <!--<li class="confirmone"><a>仅选此元素</a></li>-->
                                 <li class="selectsimilar"><a>选择同类元素</a></li>
-                                <li class="clickone"><a>点击该元素内的链接</a></li>
-                                <li class="cancelselected"><a>取消选择</a></li>
-                                <li class="finish"><a>完成并保存</a></li>
-                            </ul>
-                        </div>
-                        <div class="selectone-ope-container select-div">
-                            <p>已选择1个元素，您可以继续选取其他元素，或进行以下操作：</p>
-                            <ul>
                                 <li class="clickone"><a>点击该元素内的链接</a></li>
                                 <li>
                                     <a class="extracttxt">提取文本</a>
@@ -155,7 +147,14 @@ xtag.register('caiyun-operate-container', {
                                     </div>
                                 </li>
                                 <li class="cancelselected"><a>取消选择</a></li>
-                                <li class="finish"><a>完成并保存</a></li>
+                                
+                            </ul>
+                        </div>
+                        <div class="selectone-ope-container select-div">
+                            <p>已选择1个元素，您可以继续选取其他元素，或进行以下操作：</p>
+                            <ul>
+                                <li class="clickone"><a>点击该元素内的链接</a></li>
+                                <li class="cancelselected"><a>取消选择</a></li>
                             </ul>
                         </div>
                         <div class="selectmul-ope-container select-div">
@@ -179,7 +178,6 @@ xtag.register('caiyun-operate-container', {
                                     </div>
                                 </li>
                                 <li class="cancelselected"><a>取消选择</a></li>
-                                <li class="finish"><a>完成并保存</a></li>
                             </ul>
                         </div>
                         <!--<div class="info">
@@ -191,16 +189,19 @@ xtag.register('caiyun-operate-container', {
                             <table id="infotable">
                             </table>
                         </div>
+                        <div class="finish">
+                            <a>完成并保存</a>
+                        </div>
                         </div>
                     </div>
             `;
             shadow.innerHTML = style + innerHtml;
             this.shadow = CaiyunScope.operateshadow = shadow;
             CaiyunScope.opeshadowcon = shadow.querySelector('.catch-container');
-            this.addShadowEvents();
             CaiyunScope.checkStep();
             this.extradata = [];
             this.css_selecter = [];
+            this.addShadowEvents();
         },
         addShadowEvents: function() {
             var that = this;
@@ -215,13 +216,13 @@ xtag.register('caiyun-operate-container', {
                 var classname = $(e.target).attr("class") || $(e.target).parent().attr("class");
                 switch (classname) {
                     case 'confirmone':
-                        CaiyunScope.checkStep(true);
+                        // CaiyunScope.checkStep(true);
                         break;
                     case 'selectsimilar':
                         var similarpaths = CaiyunScope.cssselector.getSimilarSelectorList(CaiyunScope.uniquepath);
                         CaiyunScope.totalpaths = CaiyunScope.totalpaths.concat(similarpaths.minus(CaiyunScope.totalpaths));
-                        CaiyunScope.currentpaths=CaiyunScope.totalpaths;
-                        HightLight.repainSelectedShadowDom(CaiyunScope.rootshadow, CaiyunScope.totalpaths, CaiyunScope.processedpaths);
+                        CaiyunScope.currentpaths = CaiyunScope.totalpaths;
+                        HightLight.repainSelectedShadowDom(CaiyunScope.rootshadow, CaiyunScope.totalpaths, CaiyunScope.processedpaths,CaiyunScope.currentpaths);
                         CaiyunScope.checkStep();
                         break;
                     case 'startcatch':
@@ -230,70 +231,20 @@ xtag.register('caiyun-operate-container', {
                         break;
                     case 'clearselection':
                         CaiyunScope.totalpaths = [];
-                        CaiyunScope.currentpaths=[];
-                        CaiyunScope.processedpaths=[];
-                        that.extradata=[];
+                        CaiyunScope.currentpaths = [];
+                        CaiyunScope.processedpaths = [];
+                        that.extradata = [];
                         that.rendInfo();
-                        HightLight.repainSelectedShadowDom(CaiyunScope.rootshadow, CaiyunScope.totalpaths, CaiyunScope.processedpaths);
+                        HightLight.repainSelectedShadowDom(CaiyunScope.rootshadow, CaiyunScope.totalpaths, CaiyunScope.processedpaths,CaiyunScope.currentpaths);
                         CaiyunScope.checkStep();
                         break;
                     case 'clickone':
                         that.css_selecter.push(CaiyunScope.uniquepath);
-                        var openpage = {
-                            "extradata": that.extradata,
-                            "css_selecter": that.css_selecter
-                        }
-                        CaiyunSteps.push(openpage);
-                        var el_a;
-                        $.each(CaiyunScope.currentpaths,function(i,ele){
-                            var $el=$(ele.pathstring);
-                            if($(ele.pathstring)[0].tagName=='A'){
-                                el_a=$(ele.pathstring).attr('href');
-                                return false;
-                            }
-                            else{
-                                if($el.find('a')[0]){
-                                    el_a=$($el.find('a')[0]).attr('href');
-                                    return false;
-                                }
-                            }
-                            
-                        })
-                        if(!el_a){
-                            alert('当前所选元素中没有可打开的链接！！');
-                        }
-                        else{
-                            window.open(el_a,'_top');
-                        }
+                        that.openLink();
                         break;
                     case 'clickall':
                         that.css_selecter = CaiyunScope.totalpaths;
-                        var openpage = {
-                            "extradata": that.extradata,
-                            "css_selecter": that.css_selecter
-                        }
-                        CaiyunSteps.push(openpage);
-                        var el_a;
-                        $.each(CaiyunScope.currentpaths,function(i,ele){
-                            var $el=$(ele.pathstring);
-                            if($(ele.pathstring)[0].tagName=='A'){
-                                el_a=$(ele.pathstring).attr('href');
-                                return false;
-                            }
-                            else{
-                                if($el.find('a')[0]){
-                                    el_a=$($el.find('a')[0]).attr('href');
-                                    return false;
-                                }
-                            }
-                            
-                        })
-                        if(!el_a){
-                            alert('当前所选元素中没有可打开的链接！！');
-                        }
-                        else{
-                            window.open(el_a,'_top');
-                        }
+                        that.openLink();
                         break;
                     case 'extracttxt':
                         $el.next('.extracttxt-container').toggle();
@@ -307,13 +258,7 @@ xtag.register('caiyun-operate-container', {
                             "extratype": "txt",
                             "css_selecter": CaiyunScope.currentpaths
                         }
-                        $el.parent().hide();
-                        that.extradata.push(extradata);
-                        that.rendInfo();
-                        CaiyunScope.processedpaths = CaiyunScope.processedpaths.concat(CaiyunScope.totalpaths);
-                        CaiyunScope.currentpaths=CaiyunScope.totalpaths;
-                        CaiyunScope.totalpaths = [];
-                        HightLight.repainSelectedShadowDom(CaiyunScope.rootshadow, CaiyunScope.totalpaths, CaiyunScope.processedpaths);
+                        that.saveExtractData($el,extradata);
                         break;
                     case 'saveattr':
                         var extradata = {
@@ -322,29 +267,30 @@ xtag.register('caiyun-operate-container', {
                             "extratype": "attr",
                             "css_selecter": CaiyunScope.currentpaths
                         }
-                        $el.parent().hide();
-                        that.extradata.push(extradata);
-                        that.rendInfo();
-                        CaiyunScope.processedpaths = CaiyunScope.processedpaths.concat(CaiyunScope.totalpaths);
-                        CaiyunScope.currentpaths=CaiyunScope.totalpaths;
-                        CaiyunScope.totalpaths = [];
-                        HightLight.repainSelectedShadowDom(CaiyunScope.rootshadow, CaiyunScope.totalpaths, CaiyunScope.processedpaths);
+                        that.saveExtractData($el,extradata);
                         break;
                     case 'cancelselected':
                         CaiyunScope.processedpaths.deleteArray(CaiyunScope.currentpaths);
-                        if(CaiyunScope.currentpaths.length>0){
-                        that.extradata.pop();}
-                        CaiyunScope.currentpaths=CaiyunScope.totalpaths=[];
+                        var newextradata=[];
+                        $.each(that.extradata,function(i,ele){
+                            ele.css_selecter.deleteArray(CaiyunScope.currentpaths);
+                            if(ele.css_selecter.length>0){
+                                newextradata.push(ele);
+                            }
+                        })
+                        that.extradata=newextradata;
+                        CaiyunScope.currentpaths = CaiyunScope.totalpaths = [];
                         that.rendInfo();
-                        HightLight.repainSelectedShadowDom(CaiyunScope.rootshadow, CaiyunScope.totalpaths, CaiyunScope.processedpaths);
+                        HightLight.repainSelectedShadowDom(CaiyunScope.rootshadow, CaiyunScope.totalpaths, CaiyunScope.processedpaths,CaiyunScope.currentpaths);
+                        CaiyunScope.checkStep();
                         break;
                     case 'finish':
                         var openpage = {
                             "extradata": that.extradata,
                             "css_selecter": []
                         }
-                        CaiyunSteps.push(openpage);
-                        localStorage.setItem('caiyunsteps', JSON.stringify(CaiyunSteps));
+                        CaiyunSteps[caiyunstep-1]=openpage;
+                        chrome.storage.local.set({ caiyunsteps: CaiyunSteps }, function() { console.log(CaiyunSteps) });
                         break;
                 }
 
@@ -355,23 +301,65 @@ xtag.register('caiyun-operate-container', {
                 if (CaiyunScope.totalpaths.includeItem(CaiyunScope.uniquepath) <= -1) {
                     CaiyunScope.totalpaths.push(CaiyunScope.uniquepath);
                 }
-                HightLight.repainSelectedShadowDom(CaiyunScope.rootshadow, CaiyunScope.totalpaths, CaiyunScope.processedpaths);
+                HightLight.repainSelectedShadowDom(CaiyunScope.rootshadow, CaiyunScope.totalpaths, CaiyunScope.processedpaths,CaiyunScope.currentpaths);
                 CaiyunScope.checkStep();
             })
         },
+        saveExtractData: function($el,extradata) {
+            var that = this;
+            $el.parent().hide();
+            that.extradata.push(extradata);
+            that.rendInfo();
+            CaiyunScope.processedpaths = CaiyunScope.processedpaths.concat(CaiyunScope.totalpaths);
+            CaiyunScope.currentpaths = CaiyunScope.totalpaths;
+            CaiyunScope.totalpaths = [];
+            HightLight.repainSelectedShadowDom(CaiyunScope.rootshadow, CaiyunScope.totalpaths, CaiyunScope.processedpaths,CaiyunScope.currentpaths);
+        },
+        openLink: function() {
+            var that = this;
+            var openpage = {
+                "extradata": that.extradata,
+                "css_selecter": that.css_selecter
+            }
+            CaiyunSteps[caiyunstep-1]=openpage;
+            chrome.storage.local.set({ caiyunsteps: CaiyunSteps }, function() { console.log(CaiyunSteps) });
+            var el_a;
+            $.each(CaiyunScope.currentpaths, function(i, ele) {
+                var $el = $(ele.pathstring);
+                if ($(ele.pathstring)[0].tagName == 'A') {
+                    el_a = $(ele.pathstring).attr('href');
+                    return false;
+                } else {
+                    if ($el.find('a')[0]) {
+                        el_a = $($el.find('a')[0]).attr('href');
+                        return false;
+                    }
+                }
+
+            })
+            if (!el_a) {
+                alert('当前所选元素中没有可打开的链接！！');
+            } else {
+                chrome.storage.local.set({ caiyunstep: parseInt(caiyunstep) + 1 }, function() {
+                    console.log('保存成功！');
+                });
+                window.open(el_a, '_top');
+            }
+        },
         rendInfo: function() {
-            var that=this;
-            var $infotable=$(CaiyunScope.opeshadowcon).find("#infotable");
+            var that = this;
+            var $infotable = $(CaiyunScope.opeshadowcon).find("#infotable");
             $infotable.empty();
-            var infolist=getExtractInfo(that.extradata);
-            $.each(infolist,function(i,ele){
-                var inner='<tr>'+
-                '<td title="'+ele.name+'">'+ele.name+'</td>'+
-                '<td title="'+ele.value+'">'+ele.value+'</td>'+
-                '<td title="'+ele.attr_name+'">'+ele.attr_name+'</td>'+
-                '<td title="'+ele.type_name+'">'+ele.type_name+'</td>'+
-                '<td title="'+ele.path+'">'+ele.path+'</td>'+
-                '</tr>'
+            console.log(that.extradata)
+            var infolist = getExtractInfo(that.extradata);
+            $.each(infolist, function(i, ele) {
+                var inner = '<tr>' +
+                    '<td title="' + ele.name + '">' + ele.name + '</td>' +
+                    '<td title="' + ele.value + '">' + ele.value + '</td>' +
+                    '<td title="' + ele.attr_name + '">' + ele.attr_name + '</td>' +
+                    '<td title="' + ele.type_name + '">' + ele.type_name + '</td>' +
+                    '<td title="' + ele.path + '">' + ele.path + '</td>' +
+                    '</tr>'
                 $infotable.append(inner);
             })
         }

@@ -1,59 +1,81 @@
+// 判断彩云是否登录
+// $.ajax({
+//     type:"post",
+//     url:"http://caiyun.newssdk.com/caiyun/task/getlang",
+//     data:{
+//         // "checked":3182,
+//         // "enable_node_type":"site"
+//     },
+//     success:function(res){
+//         console.log(res);
+//     }
+// })
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) { //获取用户名
+    if (request.cmd == 'test') console.log(request.value);
+});
 (function(root) {
-    root.CaiyunSteps=[];
-    var caiyunstep=getQuery("caiyunstep");
-    root.CaiyunPostDataTemp={
-        "url":'',
+    root.CaiyunSteps = [];
+    chrome.storage.local.get({ caiyunstep:1 }, function(items) {
+        console.log(items.caiyunstep)
+        root.caiyunstep = getQuery("caiyunstep") || items.caiyunstep;
+        chrome.storage.local.set({ caiyunstep: caiyunstep }, function() {
+        });
+    });
+    chrome.storage.local.get({ caiyunsteps:[] }, function(items) {
+        root.CaiyunSteps = (caiyunstep>1)?items.caiyunsteps:[];
+        console.log(root.CaiyunSteps)
+        chrome.storage.local.set({ caiyunsteps: CaiyunSteps }, function() {
+        });
+    });
+    root.CaiyunPostDataTemp = {
+        "url": '',
         "setting": {
-                "seed_type": "url_single",//单个url
-                "seed_urls": "http://nc.auto.sina.com.cn/shcs/list.shtml",
-                "protocol": "http"
-            },
-        "css_selecter":[],
-        "extradata":
-            [
-                {"name": "链接标题",
+            "seed_type": "url_single", //单个url
+            "seed_urls": "http://nc.auto.sina.com.cn/shcs/list.shtml",
+            "protocol": "http"
+        },
+        "css_selecter": [],
+        "extradata": [{
+            "name": "链接标题",
+            "extratype": "txt",
+            "css_selecter": []
+        }],
+        "openpage": {
+            "css_selecter": [],
+            "extradata": [{
+                "name": "链接标题",
                 "extratype": "txt",
                 "css_selecter": []
-                }
-            ],
-        "openpage":{
-            "css_selecter":[],
-            "extradata":
-            [
-                {"name": "链接标题",
-                "extratype": "txt",
-                "css_selecter": []
-                }
-            ],
-            "openpage":{}
+            }],
+            "openpage": {}
         }
     }
-    root.CaiyunPostData={
-        "url":'',
+    root.CaiyunPostData = {
+        "url": '',
         "setting": {
-                "seed_type": "url_single",//单个url
-                "seed_urls": "http://nc.auto.sina.com.cn/shcs/list.shtml",
-                "protocol": "http"
-            }
+            "seed_type": "url_single", //单个url
+            "seed_urls": "http://nc.auto.sina.com.cn/shcs/list.shtml",
+            "protocol": "http"
         }
+    }
     root.CaiyunScope = {
         cssselector: new CssSelector({}),
         uniquepath: {},
         totalpaths: [],
-        processedpaths:[],
-        currentpaths:[],
+        processedpaths: [],
+        currentpaths: [],
         rootshadow: {},
         startcatch: false,
         operateshadow: {},
-        opeshadowcon:{},
-        selectmode: 0//操作状态：0 初始 ,1 选择了一个元素，2 确定选择一个元素 ，3 选择多个元素
+        opeshadowcon: {},
+        selectmode: 0 //操作状态：0 初始 ,1 选择了一个元素，2 确定选择一个元素 ，3 选择多个元素
     }
     root.CaiyunScope.checkStep = function(confirmone) {
         $(CaiyunScope.opeshadowcon).find('.extracttxt-container').hide();
         $(CaiyunScope.opeshadowcon).find('.extractattr-container').hide();
         $(CaiyunScope.opeshadowcon).find(".select-div").hide();
-        CaiyunScope.selectmode=confirmone?2:(CaiyunScope.totalpaths.length<=0?0:(CaiyunScope.totalpaths.length==1?1:3));
-        switch(CaiyunScope.selectmode){
+        CaiyunScope.selectmode = confirmone ? 2 : (CaiyunScope.totalpaths.length <= 0 ? 0 : (CaiyunScope.totalpaths.length == 1 ? 1 : 3));
+        switch (CaiyunScope.selectmode) {
             case 1:
                 $(CaiyunScope.opeshadowcon).find(".selectone-container").show();
                 break;
@@ -86,12 +108,13 @@ $(document).ready(function() {
             // CaiyunScope.operateshadow.querySelector("#csspath").value=CaiyunScope.uniquepath.pathstring;
             if (CaiyunScope.totalpaths.includeItem(CaiyunScope.uniquepath) <= -1) {
                 CaiyunScope.totalpaths.push(CaiyunScope.uniquepath);
-                HightLight.repainSelectedShadowDom(CaiyunScope.rootshadow, CaiyunScope.totalpaths,CaiyunScope.processedpaths);
+                CaiyunScope.currentpaths = CaiyunScope.totalpaths;
+                HightLight.repainSelectedShadowDom(CaiyunScope.rootshadow, CaiyunScope.totalpaths, CaiyunScope.processedpaths,CaiyunScope.currentpaths);
             } else {
                 CaiyunScope.totalpaths.splice(CaiyunScope.totalpaths.includeItem(CaiyunScope.uniquepath), 1);
-                HightLight.repainSelectedShadowDom(CaiyunScope.rootshadow, CaiyunScope.totalpaths,CaiyunScope.processedpaths);
+                CaiyunScope.currentpaths = CaiyunScope.totalpaths;
+                HightLight.repainSelectedShadowDom(CaiyunScope.rootshadow, CaiyunScope.totalpaths, CaiyunScope.processedpaths,CaiyunScope.currentpaths);
             }
-            CaiyunScope.currentpaths=CaiyunScope.totalpaths;
             CaiyunScope.checkStep();
         }
     })

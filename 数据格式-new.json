@@ -1,0 +1,34 @@
+{
+    "setting":
+    {
+        // "seed_type": "url_single", 
+        "seed_urls": "http://nc.auto.sina.com.cn/shcs/list.shtml", //种子url
+        "protocol": "http" //协议？？
+    },
+    "css_selecter": [], //如果在有点击链接的操作就将链接的css选择器放到css_selecter中
+    "extradata": [ //如果有提取文本或属性的操作就放到extradata中
+        {
+            "name": "链接标题",//字段名称
+            "extratype": "txt",//提取类型
+            "css_selecter": []//选择器
+        },
+        {
+            "name": "链接标题",
+            "extratype": "attr",
+            "attr_name":"href",
+            "css_selecter": []
+        }
+    ],
+    "openpage"://如果需要点击链接则下个页面的信息放到openpage中，依次类推
+    {
+        "css_selecter": [],
+        "extradata": [
+        {
+            "name": "链接标题",
+            "extratype": "txt",
+            "css_selecter": []
+        }],
+        "openpage":
+        {}
+    }
+}

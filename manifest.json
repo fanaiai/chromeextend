@@ -1,37 +1,48 @@
 {
-  "manifest_version": 2,
-
-  "name": "我的扩展",
-  "description": "This extension allows the user to change the background color of the current page.",
-  "version": "1.0",
-
-  "browser_action": {
-    "default_icon": "img/icon.png",
-    "default_popup": "popup.html",
-	"default_title": "Click here!"
-  },
-  
-  "content_scripts": [{
+    "manifest_version": 2,
+    "name": "我的扩展",
+    "description": "This extension allows the user to change the background color of the current page.",
+    "version": "1.0",
+    "browser_action":
+    {
+        "default_icon": "img/icon.png",
+        "default_popup": "popup.html",
+        "default_title": "Click here!"
+    },
+    "background":
+    {
+        // 2种指定方式，如果指定JS，那么会自动生成一个背景页
+        "scripts": ["js/background.js"]
+    },
+    "content_scripts": [
+    {
         // "matches": ["*://*/*"],
         "matches": ["<all_urls>"],
         "js": [
-          "vendor/jquery-3.3.1.min.js",
-          "libs/x-tag-core-with-shadowdom.js",
-        	"caiyun-operate-container.js",
-          "customtools.js",
-          "highlight.js",
-          // "js/inspector.js",
-          "cssselector.js",
-          "index.js"
+            "libs/x-tag-core-with-shadowdom.js",
+            "libs/jquery-3.3.1.min.js",
+            "js/caiyun-operate-container.js",
+            "js/custom-tools.js",
+            "js/css-selector.js",
+            "js/high-light.js",
+            "js/index.js"
         ],
-        "css":[
-          "css/style.css"
+        "css": [
+            "css/style.css"
         ]
+        // ,
+        // "run_at": "document_start"
     }],
-  "permissions": [
-		"tabs",
-        "activeTab",
-        "notifications",
-        "storage"
-  ]
+    "permissions": [
+        "contextMenus", // 右键菜单
+        "tabs", // 标签
+        "notifications", // 通知
+        "webRequest", // web请求
+        "webRequestBlocking", // 阻塞式web请求
+        "storage", // 插件本地存储
+        "http://*/*", // 可以通过executeScript或者insertCSS访问的网站
+        "https://*/*" // 可以通过executeScript或者insertCSS访问的网站
+    ]
+    // ,
+    // "devtools_page": "devtools.html"
 }
