@@ -10,6 +10,11 @@
 //         console.log(res);
 //     }
 // })
+function getLoginInfo(){
+    var taskid=getQuery('taskid');
+    var step=getQuery('step');
+    return true;
+}
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) { //获取用户名
     if (request.cmd == 'test') console.log(request.value);
 });
@@ -56,7 +61,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) { /
             "seed_type": "url_single", //单个url
             "seed_urls": "http://nc.auto.sina.com.cn/shcs/list.shtml",
             "protocol": "http"
-        }
+        },
+        taskid:-1
     }
     root.CaiyunScope = {
         cssselector: new CssSelector({}),
@@ -95,6 +101,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) { /
 
 })(window)
 $(document).ready(function() {
+    if(!getLoginInfo()){
+        return false;
+    }
     CaiyunPostData.url = window.location.href;
     $("body").append("<div id='caiyun-root' class='caiyun-root caiyun-highlight' style='width:0;height:0'></div>");
     $("body").append("<caiyun-operate-container></caiyun-operate-container>");

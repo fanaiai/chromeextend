@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <style type="text/css">
+    #out {
+        max-height: 100px;
+        overflow: auto;
+    }
+    </style>
+    <script type="text/javascript" src="../libs/jquery-3.3.1.min.js"></script>
+</head>
+
+<body>
+    <div id="out">
+        <ul>
+            <li>哈哈哈哈</li>
+            <li>哈哈哈哈</li>
+            <li>哈哈哈哈</li>
+            <li>哈哈哈哈</li>
+            <li>哈哈哈哈</li>
+            <li>哈哈哈哈</li>
+            <li>哈哈哈哈</li>
+            <li>哈哈哈哈</li>
+            <li>哈哈哈哈</li>
+            <li>哈哈哈哈</li>
+            <li>哈哈哈哈</li>
+            <li>哈哈哈哈</li>
+            <li>哈哈哈哈</li>
+            <li>哈哈哈哈</li>
+            <li>哈哈哈哈</li>
+        </ul>
+    </div>
+    <script type="text/javascript">
+    // window.onmousewheel = document.onmousewheel = function(e) {
+    //     console.log(e)
+    //     e.preventDefault();
+    // 	e.stopPropagation();
+    // }
+    $("#out").scroll(function(e){
+    	// console.log(e)
+    	e.preventDefault();
+    	e.stopPropagation();
+    })
+    $(document).bind("mousewheel",function(e){
+    	console.log(e)
+    	// e.preventDefault();
+    })
+    </script>
+</body>
+
+</html>

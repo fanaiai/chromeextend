@@ -60,6 +60,8 @@ xtag.register('caiyun-operate-container', {
                                 margin: 0;
                                 text-align: center;
                                 cursor:move;
+                                background:rgb(2, 136, 209);
+                                color:#fff;
                             }
                             .ope,.info{
                                 line-height: 30px;

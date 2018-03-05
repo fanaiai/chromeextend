@@ -1,7 +1,7 @@
 chrome.webRequest.onBeforeRequest.addListener(
     function(details) {
         // var requestdata={"url":details.url,"data":details.requestBody};
-        // sendMessageToContentScript({ cmd: 'test', value: JSON.stringify(requestdata) }, function(response) {
+        // sendMessageToContentScript({ cmd: 'test', value: JSON.stringify(details) }, function(response) {
         //     console.log('来自content的回复：' + response);
         // });
         // return { cancel: details.url.indexOf("://www.evil.com/") != -1 };

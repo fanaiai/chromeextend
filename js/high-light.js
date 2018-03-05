@@ -74,6 +74,9 @@
                 })
             }
         },
+        clearHoverShadowDom:function(){
+            
+        },
         clearallSelectedShadowDom: function(rootshadow) {
             var rootshadow = rootshadow || this.rootshadow || null;
             rootshadow.innerHTML = '';
@@ -111,7 +114,7 @@
                     var host = $(e.pathstring);
                     host.each(function(i, ele) {
                         var sizes = that.getSizes(ele);
-                        that.addSelectedShadowDom(rootshadow, sizes, ele.tagName,e.processed,e.current);
+                        that.addSelectedShadowDom(rootshadow, sizes, ele.tagName, e.processed, e.current);
                     })
                 })(totalpaths[k])
             }
@@ -119,27 +122,13 @@
         addResizeEvent: function() {
             var that = this;
             $(window).resize(function(e) {
-                that.repainSelectedShadowDom(CaiyunScope.rootshadow, CaiyunScope.totalpaths, CaiyunScope.processedpaths,CaiyunScope.currentpaths);
+                that.repainSelectedShadowDom(CaiyunScope.rootshadow, CaiyunScope.totalpaths, CaiyunScope.processedpaths, CaiyunScope.currentpaths);
             })
-            window.onmousewheel = document.onmousewheel = function(e) {
-                // e.target.onscroll=function(){
-                //     console.log("scroll")
-                //     that.repainSelectedShadowDom(that.rootshadow,CaiyunScope.totalpaths);
-                // }
-                // $(e.target).scroll()
-                // that.repainSelectedShadowDom(that.rootshadow,CaiyunScope.totalpaths);
-                // clearTimeout($.data(this, 'timer'));
-                // $.data(this, 'timer', setTimeout(function() {
-                //     that.repainSelectedShadowDom(that.rootshadow, CaiyunScope.totalpaths);
-                // }, 250));
-            }
-            window.onscroll = document.onscroll = function(e) {
-                that.repainSelectedShadowDom(CaiyunScope.rootshadow, CaiyunScope.totalpaths, CaiyunScope.processedpaths,CaiyunScope.currentpaths);
-                // clearTimeout($.data(this, 'timer'));
-                // $.data(this, 'timer', setTimeout(function() {
-                //     that.repainSelectedShadowDom(that.rootshadow, CaiyunScope.totalpaths);
-                // }, 250));
-            }
+            $(document).bind("mousewheel", function(e) {
+                that.repainSelectedShadowDom(CaiyunScope.rootshadow, CaiyunScope.totalpaths, CaiyunScope.processedpaths, CaiyunScope.currentpaths);
+                // console.log(e)
+                // e.preventDefault();
+            })
         }
     }
     root.HightLight = HightLight;
